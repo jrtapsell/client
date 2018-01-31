@@ -217,6 +217,64 @@ func (m MessageUnboxed) IsValid() bool {
 	return false
 }
 
+func (m MessageUnboxed) IsValidNShit() bool {
+	if !m.IsValid() {
+		return false
+	}
+	valid := m.Valid()
+	if valid.ServerHeader.SupersededBy != 0 {
+		// Message superseded
+		return false
+	}
+	if valid.ClientHeader.MessageType == MessageType_NONE {
+		return false
+	}
+	bodyType, err := valid.MessageBody.MessageType()
+	if err != nil {
+		return false
+	}
+	return bodyType == valid.ClientHeader.MessageType
+}
+
+// @@@ TODO remove
+func (m MessageUnboxed) DebugString() string {
+	state, err := m.State()
+	if err != nil {
+		return fmt.Sprintf("[INVALID err:%v]", err)
+	}
+	if state != MessageUnboxedState_VALID {
+		return fmt.Sprintf("[state:%v]", state)
+	}
+	valid := m.Valid()
+	s := fmt.Sprintf("%v %v", state, valid.ServerHeader.MessageID)
+	bodyType, err := valid.MessageBody.MessageType()
+	if err != nil {
+		return fmt.Sprintf("[INVALID-BODY err:%v]", err)
+	}
+	if valid.ClientHeader.MessageType == bodyType {
+		s = fmt.Sprintf("%v %v", s, valid.ClientHeader.MessageType)
+	} else {
+		s = fmt.Sprintf("%v %v!=%v", s, valid.ClientHeader.MessageType, bodyType)
+	}
+	if valid.ServerHeader.SupersededBy != 0 {
+		s = fmt.Sprintf("%v supBy:%v", s, valid.ServerHeader.SupersededBy)
+	}
+	return fmt.Sprintf("[%v]", s)
+}
+
+// @@@ TODO remove
+func MessageUnboxedDebugStrings(ms []MessageUnboxed) (res []string) {
+	for _, m := range ms {
+		res = append(res, m.DebugString())
+	}
+	return res
+}
+
+// @@@ TODO remove
+func MessageUnboxedDebugLines(ms []MessageUnboxed) string {
+	return strings.Join(MessageUnboxedDebugStrings(ms), "\n")
+}
+
 func (m MessageUnboxedValid) AsDeleteHistory() (res MessageDeleteHistory, err error) {
 	if m.ClientHeader.MessageType != MessageType_DELETEHISTORY {
 		return res, fmt.Errorf("message is %v not %v", m.ClientHeader.MessageType, MessageType_DELETEHISTORY)

@@ -688,7 +688,7 @@ func PickLatestMessageUnboxed(conv chat1.ConversationLocal, typs []chat1.Message
 	var msgs []chat1.MessageUnboxed
 	for _, typ := range typs {
 		msg, err := conv.GetMaxMessage(typ)
-		if err == nil && msg.IsValid() {
+		if err == nil && msg.IsValidNShit() {
 			msgs = append(msgs, msg)
 		}
 	}
@@ -754,6 +754,9 @@ func systemMessageSnippet(msg chat1.MessageSystem) string {
 }
 
 func GetMsgSnippet(msg chat1.MessageUnboxed) string {
+	if !msg.IsValidNShit() {
+		return ""
+	}
 	switch msg.GetMessageType() {
 	case chat1.MessageType_TEXT:
 		return msg.Valid().MessageBody.Text().Body

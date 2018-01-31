@@ -559,10 +559,12 @@ func (s *HybridConversationSource) Pull(ctx context.Context, convID chat1.Conver
 					s.Debug(ctx, "Pull: skipping mark as read call")
 				}
 			}
+			s.Debug(ctx, "@@@ Pull: pre-process %v messages\n%v", len(thread.Messages), chat1.MessageUnboxedDebugLines(thread.Messages))
 			// Run post process stuff
 			if err = s.postProcessThread(ctx, uid, conv, &thread, query, nil, true); err != nil {
 				return thread, rl, err
 			}
+			s.Debug(ctx, "@@@ Pull: post-processed %v messages\n%v", len(thread.Messages), chat1.MessageUnboxedDebugLines(thread.Messages))
 			return thread, rl, nil
 		}
 		s.Debug(ctx, "Pull: cache miss: err: %s", err.Error())
@@ -605,10 +607,13 @@ func (s *HybridConversationSource) Pull(ctx context.Context, convID chat1.Conver
 		s.Debug(ctx, "Pull: unable to commit thread locally: convID: %s uid: %s", convID, uid)
 	}
 
+	s.Debug(ctx, "@@@ Pull: pre-process %v messages\n%v", len(thread.Messages), chat1.MessageUnboxedDebugLines(thread.Messages))
+
 	// Run post process stuff
 	if err = s.postProcessThread(ctx, uid, unboxConv, &thread, query, nil, true); err != nil {
 		return thread, rl, err
 	}
+	s.Debug(ctx, "@@@ Pull: post-processed %v messages\n%v", len(thread.Messages), chat1.MessageUnboxedDebugLines(thread.Messages))
 	return thread, rl, nil
 }
 
