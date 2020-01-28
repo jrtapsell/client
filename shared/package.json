@@ -137,7 +137,7 @@
     "shallowequal": "1.0.2",
     "tlds": "^1.199.0",
     "typedarray-to-buffer": "3.1.2",
-    "url-parse": "^1.2.0",
+    "url-parse": "^1.4.5",
     "util": "0.10.3",
     "uuid": "^3.0.0"
   },
