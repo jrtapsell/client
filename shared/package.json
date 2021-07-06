@@ -44,7 +44,9 @@
     "rn-storybook": "storybook start -p 7007",
     "build-storybook": "build-storybook",
     "modules": "yarn install --pure-lockfile",
-    "coverage": "flow-coverage-report -i '**/*.js' -i '**/*.js.flow' -x 'node_modules/**' -x 'markdown/parser.js' -x 'flow-typed/**' -x 'desktop/dist/**' -x 'coverage/**' -f ./node_modules/.bin/flow -o ./coverage -t text -t html"
+    "coverage": "flow-coverage-report -i '**/*.js' -i '**/*.js.flow' -x 'node_modules/**' -x 'markdown/parser.js' -x 'flow-typed/**' -x 'desktop/dist/**' -x 'coverage/**' -f ./node_modules/.bin/flow -o ./coverage -t text -t html",
+    "snyk-protect": "snyk protect",
+    "prepare": "yarn run snyk-protect"
   },
   "jest": {
     "modulePaths": [
@@ -139,7 +141,8 @@
     "typedarray-to-buffer": "3.1.2",
     "url-parse": "^1.2.0",
     "util": "0.10.3",
-    "uuid": "^3.0.0"
+    "uuid": "^3.0.0",
+    "snyk": "^1.653.0"
   },
   "devDependencies": {
     "@storybook/addon-storyshots": "3.2.17",
@@ -204,5 +207,6 @@
   },
   "optionalDependencies": {
     "regedit": "2.2.7"
-  }
+  },
+  "snyk": true
 }
